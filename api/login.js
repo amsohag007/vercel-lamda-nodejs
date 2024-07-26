@@ -36,5 +36,5 @@ module.exports = async (req, res) => {
   const token = jwt.sign({ userId: user.id }, 'secret', { expiresIn: '4h' });
   client.end();
 
-  res.status(200).json({ token });
+  res.status(200).json({ username: user.username, token });
 };
