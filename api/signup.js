@@ -4,7 +4,7 @@ const { Pool } = require('pg'); // Using Pool for PostgreSQL client
 
 // Database connection pool
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // Ensure this environment variable is set
+  connectionString: process.env.POSTGRES_URL, // Ensure this environment variable is set
 });
 
 module.exports = async (req, res) => {

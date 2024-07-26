@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     return res.status(400).json({ message: 'Username and password are required' });
   }
 
-  const client = new Client({ connectionString: process.env.DATABASE_URL });
+  const client = new Client({ connectionString: process.env.POSTGRES_URL });
   await client.connect();
 
   const query = 'SELECT * FROM users WHERE username = $1';
@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+  const token = jwt.sign({ userId: user.id }, 'secret', { expiresIn: '4h' });
   client.end();
 
   res.status(200).json({ token });
