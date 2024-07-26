@@ -3,7 +3,8 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Welcome');
+  console.log('Server is running on port 3000');
+  res.send('Welcome to Vercel Servelss API Functions');
 });
 
 app.listen(3000, () => {

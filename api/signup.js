@@ -11,7 +11,6 @@ module.exports = async (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password are required' });
   }
-
   const hashedPassword = await bcrypt.hash(password, 10);
   const client = new Client({ connectionString: process.env.DATABASE_URL });
   await client.connect();
