@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Client } = require('pg');
+const { Client } = require('pg'); // Using 'pg' for PostgreSQL client
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     return res.status(400).json({ message: 'Username and password are required' });
   }
 
-  const client = new Client();
+  const client = new Client({ connectionString: process.env.DATABASE_URL });
   await client.connect();
 
   const query = 'SELECT * FROM users WHERE username = $1';
@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  const token = jwt.sign({ userId: user.id }, 'your_jwt_secret');
+  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
   client.end();
 
   res.status(200).json({ token });

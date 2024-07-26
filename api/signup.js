@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { Client } = require('pg');
+const { Client } = require('pg'); // Using 'pg' for PostgreSQL client
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const client = new Client();
+  const client = new Client({ connectionString: process.env.DATABASE_URL });
   await client.connect();
 
   const query = 'INSERT INTO users (username, password) VALUES ($1, $2)';
