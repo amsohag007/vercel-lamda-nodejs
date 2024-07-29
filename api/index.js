@@ -1,7 +1,6 @@
 const express = require('express');
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../swagger');
+const serverless = require('serverless-http');
+const swaggerDocument = require('./swagger');
 
 const app = express();
 
@@ -16,8 +15,8 @@ app.get('/', (req, res) => {
 });
 
 // API routes
-app.use('/api/signup', require('./signup'));
-app.use('/api/request-reset-password', require('./request-reset-password'));
-app.use('/api/reset-password', require('./reset-password'));
+app.use('/api/signup', require('./api/signup'));
+app.use('/api/request-reset-password', require('./api/request-reset-password'));
+// Add more routes as needed
 
-module.exports = app; // Ensure that app is exported correctly
+module.exports = app;

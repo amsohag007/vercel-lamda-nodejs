@@ -20,7 +20,7 @@ const swaggerOptions = {
       }
     ],
   },
-  apis: ['./api/*.js'], // Files containing Swagger annotations
+  apis: ['./api/*.js'], // Adjust the path to your API files
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);

@@ -7,6 +7,7 @@ const pool = new Pool({
   connectionString: process.env.POSTGRES_URL, // Ensure this environment variable is set
 });
 
+
 /**
  * @swagger
  * /api/signup:
@@ -34,7 +35,6 @@ const pool = new Pool({
  *       500:
  *         description: Internal server error
  */
-
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
