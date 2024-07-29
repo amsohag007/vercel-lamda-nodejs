@@ -24,7 +24,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://your-vercel-url.vercel.app/api",
+        url: "https://vercel-lamda-nodejs.vercel.app/api",
       },
     ],
   },
@@ -32,7 +32,11 @@ const swaggerOptions = {
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: CSS_URL }));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
+  customCss:
+    '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
+  customCssUrl: CSS_URL,
+}));
 
 export default function handler(req, res) {
   if (!req.url.startsWith("/api-docs")) {
