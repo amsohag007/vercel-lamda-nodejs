@@ -4,7 +4,7 @@ import allowCors from './cors';
 
 // Database connection pool
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL, // Ensure this environment variable is set
+  connectionString: process.env.POSTGRES_URL, // Ensure this environment variable is set 
 });
 
 /**
@@ -41,8 +41,8 @@ const signupHandler = async (req, res) => {
 
   const { username, email, password } = req.body;
 
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: 'Username, email, and password are required' });
+  if (!email || !password) {
+    return res.status(400).json({ message: 'email, and password are required' });
   }
 
   try {
