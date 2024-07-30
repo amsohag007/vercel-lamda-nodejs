@@ -15,7 +15,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://vercel-lamda-nodejs.vercel.app/api",
+        url: "https://vercel-lamda-nodejs.vercel.app",
       },
     ],
   },
