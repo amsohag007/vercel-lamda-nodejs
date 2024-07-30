@@ -1,12 +1,12 @@
 require('dotenv').config();
 const express = require('express');
-const swaggerDocument = require('./api/swagger');
-
+const swaggerRouter = require('./swagger');
 const app = express();
+
 app.use(express.json());
 
 // Set up Swagger
-app.use('/api-docs', swaggerDocument);
+app.use('/api-docs', swaggerRouter);
 
 // Dummy root route
 app.get('/', (req, res) => {
