@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const serverless = require('serverless-http');
-const swaggerDocument = require('./swagger');
+const swaggerDocument = require('./api/swagger');
 
 const app = express();
 app.use(express.json());

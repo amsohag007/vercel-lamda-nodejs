@@ -16,11 +16,6 @@ const swaggerOptions = {
       title: "Vercel Serverless API",
       version: "1.0.0",
       description: "API documentation for Vercel serverless functions",
-      contact: {
-        name: "Developer",
-        url: "https://yourwebsite.com",
-        email: "developer@yourwebsite.com",
-      },
     },
     servers: [
       {
