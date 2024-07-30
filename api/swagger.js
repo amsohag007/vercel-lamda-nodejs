@@ -1,4 +1,4 @@
-// swagger.js
+// api/swagger.js
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import express from "express";

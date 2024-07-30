@@ -1,12 +1,10 @@
-require('dotenv').config();
-const bcrypt = require('bcrypt');
-const { Pool } = require('pg'); // Using Pool for PostgreSQL client
+import bcrypt from 'bcrypt';
+import { Pool } from 'pg'; // Using Pool for PostgreSQL client
 
 // Database connection pool
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL, // Ensure this environment variable is set
 });
-
 
 /**
  * @swagger
@@ -35,7 +33,7 @@ const pool = new Pool({
  *       500:
  *         description: Internal server error
  */
-module.exports = async (req, res) => {
+export default async function signupHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -50,10 +48,6 @@ module.exports = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const client = await pool.connect();
-
-    if (!client) {
-      return res.status(500).json({ message: 'Db error' });
-    }
 
     try {
       const existingUser = await client.query('SELECT * FROM users WHERE username = $1 OR email = $2', [username, email]);
@@ -72,4 +66,4 @@ module.exports = async (req, res) => {
     console.error('Error creating user:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-};
+}

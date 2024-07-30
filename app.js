@@ -1,8 +1,12 @@
-require('dotenv').config();
-const express = require('express');
-const swaggerRouter = require('./api/swagger');
-const app = express();
+// app.js
+import dotenv from 'dotenv';
+import express from 'express';
+import swaggerRouter from './api/swagger';
+import signupRouter from './api/signup'; // Ensure this file uses ES6 export
+// import requestResetPasswordRouter from './api/request-reset-password'; // Ensure this file uses ES6 export
 
+dotenv.config();
+const app = express();
 app.use(express.json());
 
 // Set up Swagger
@@ -14,8 +18,7 @@ app.get('/', (req, res) => {
 });
 
 // API routes
-app.use('/api/signup', require('./api/signup'));
-app.use('/api/request-reset-password', require('./api/request-reset-password'));
-// Add more routes as needed
+app.use('/api/signup', signupRouter);
+app.use('/api/request-reset-password', requestResetPasswordRouter);
 
-module.exports = app; // Ensure that app is exported correctly
+export default app; // Ensure that app is exported correctly
