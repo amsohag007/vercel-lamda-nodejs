@@ -1,9 +1,37 @@
-require('dotenv').config();
-const { Client } = require('pg');
-const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken');
+// api/request-reset-password.js
+import dotenv from 'dotenv';
+import { Client } from 'pg';
+import nodemailer from 'nodemailer';
+import jwt from 'jsonwebtoken';
 
-module.exports = async (req, res) => {
+dotenv.config();
+
+/**
+ * @swagger
+ * /api/request-reset-password:
+ *   post:
+ *     summary: Request password reset
+ *     description: Sends a password reset email to the user if the email is found.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email address
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Password reset email sent
+ *       400:
+ *         description: Email is required or email not found
+ *       500:
+ *         description: Error sending email
+ */
+export default async function requestResetPasswordHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -59,4 +87,4 @@ module.exports = async (req, res) => {
   } finally {
     client.end();
   }
-};
+}

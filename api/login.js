@@ -1,40 +1,83 @@
-require('dotenv').config();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { Client } = require('pg'); // Using 'pg' for PostgreSQL client
+// api/login.js
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { Client } from 'pg'; // Using 'pg' for PostgreSQL client
 
-module.exports = async (req, res) => {
+dotenv.config();
+
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: User login
+ *     description: Authenticates a user using email and returns a JSON Web Token (JWT).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Email and password are required
+ *       401:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal server error
+ */
+export default async function loginHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password are required' });
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
   }
 
   const client = new Client({ connectionString: process.env.POSTGRES_URL });
-  await client.connect();
 
-  const query = 'SELECT * FROM users WHERE username = $1';
-  const result = await client.query(query, [username]);
+  try {
+    await client.connect();
 
-  if (result.rows.length === 0) {
-    client.end();
-    return res.status(401).json({ message: 'Invalid credentials' });
+    const query = 'SELECT * FROM users WHERE email = $1'; // Change username to email
+    const result = await client.query(query, [email]);
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const user = result.rows[0];
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '4h' });
+    return res.status(200).json({ email: user.email, token }); // Return email instead of username
+  } catch (error) {
+    console.error('Error during login:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  } finally {
+    await client.end();
   }
-
-  const user = result.rows[0];
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-
-  if (!isPasswordValid) {
-    client.end();
-    return res.status(401).json({ message: 'Invalid credentials' });
-  }
-
-  const token = jwt.sign({ userId: user.id }, 'secret', { expiresIn: '4h' });
-  client.end();
-
-  res.status(200).json({ username: user.username, token });
-};
+}

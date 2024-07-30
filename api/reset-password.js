@@ -1,9 +1,41 @@
-require('dotenv').config();
-const bcrypt = require('bcrypt');
-const { Client } = require('pg');
-const jwt = require('jsonwebtoken');
+// api/reset-password.js
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import { Client } from 'pg';
+import jwt from 'jsonwebtoken';
 
-module.exports = async (req, res) => {
+dotenv.config();
+
+/**
+ * @swagger
+ * /api/reset-password:
+ *   post:
+ *     summary: Reset user password
+ *     description: Resets the user's password using a valid token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: JWT token for verification
+ *                 example: abcdef123456
+ *               newPassword:
+ *                 type: string
+ *                 description: The new password for the user
+ *                 example: NewPassword123!
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ *       400:
+ *         description: Token and new password are required
+ *       500:
+ *         description: Error resetting password
+ */
+export default async function resetPasswordHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -30,4 +62,4 @@ module.exports = async (req, res) => {
     console.error('Error resetting password:', error);
     res.status(500).json({ message: 'Error resetting password' });
   }
-};
+}
