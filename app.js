@@ -19,6 +19,6 @@ app.get('/', (req, res) => {
 
 // API routes
 app.use('/api/signup', signupRouter);
-app.use('/api/request-reset-password', requestResetPasswordRouter);
+// app.use('/api/request-reset-password', requestResetPasswordRouter);
 
 export default app; // Ensure that app is exported correctly
