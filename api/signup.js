@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { Pool } from 'pg'; // Using Pool for PostgreSQL client
+import allowCors from './cors';
 
 // Database connection pool
 const pool = new Pool({
@@ -33,7 +34,7 @@ const pool = new Pool({
  *       500:
  *         description: Internal server error
  */
-export default async function signupHandler(req, res) {
+const signupHandler = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -67,3 +68,4 @@ export default async function signupHandler(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+export default allowCors(signupHandler);
