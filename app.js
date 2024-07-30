@@ -1,6 +1,7 @@
 // app.js
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
 import swaggerRouter from './api/swagger';
 import signupRouter from './api/signup';
 import loginRouter from './api/login';
@@ -10,6 +11,16 @@ import resetPasswordRouter from './api/reset-password';
 dotenv.config();
 const app = express();
 app.use(express.json());
+
+// Configure CORS
+const corsOptions = {
+  origin: '*', // Allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+  credentials: true, // Allow cookies to be sent
+};
+
+app.use(cors(corsOptions));
 
 // Set up Swagger
 app.use('/api-docs', swaggerRouter);
