@@ -1,9 +1,13 @@
-// api/swagger.js
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import express from "express";
+import path from "path";
+const glob = require('glob'); // CommonJS import
 
 const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+
+// Use glob to include .ts and .js files only, excluding directories
+const filePatterns = glob.sync(path.join(__dirname, '../api/**/*.{ts,js}'), { nodir: true });
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -19,7 +23,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./api/*.ts"],
+  apis: filePatterns,
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
