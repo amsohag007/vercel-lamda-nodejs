@@ -1,9 +1,10 @@
-// api/login.js
+// api/login.ts
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Client } from 'pg'; // Using 'pg' for PostgreSQL client
 import allowCors from './cors'; // Import the allowCors middleware
+import { Request, Response } from 'express';
 
 dotenv.config();
 
@@ -43,15 +44,17 @@ dotenv.config();
  *       500:
  *         description: Internal server error
  */
-async function loginHandler(req, res) {
+const loginHandler = async (req: Request, res: Response): Promise<void> => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    res.status(405).json({ message: 'Method not allowed' });
+    return;
   }
 
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email & Password are required' });
+    res.status(400).json({ message: 'Email & Password are required' });
+    return;
   }
 
   const client = new Client({ connectionString: process.env.POSTGRES_URL });
@@ -63,24 +66,26 @@ async function loginHandler(req, res) {
     const result = await client.query(query, [email]);
 
     if (result.rows.length === 0) {
-      return res.status(401).json({ message: 'Email & Password does not match.' });
+      res.status(401).json({ message: 'Email & Password does not match.' });
+      return;
     }
 
     const user = result.rows[0];
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Email & Password does not match.' });
+      res.status(401).json({ message: 'Email & Password does not match.' });
+      return;
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '4h' });
-    return res.status(200).json({ email: user.email, token }); // Return email instead of username
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string, { expiresIn: '4h' });
+    res.status(200).json({ email: user.email, token }); // Return email instead of username
   } catch (error) {
     console.error('Error during login:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   } finally {
     await client.end();
   }
-}
+};
 
 export default allowCors(loginHandler);
