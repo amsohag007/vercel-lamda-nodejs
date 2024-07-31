@@ -4,7 +4,8 @@
   "description": "",
   "main": "api/index.ts",
   "scripts": {
-    "start": "vercel dev",
+    "start": "ts-node api/index.ts",
+    "dev": "vercel dev",
     "deploy": "vercel deploy --prod"
   },
   "keywords": [],
