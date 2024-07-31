@@ -1,9 +1,10 @@
-// api/reset-password.js
+// api/reset-password.ts
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { Client } from 'pg';
 import jwt from 'jsonwebtoken';
 import allowCors from './cors'; // Import the allowCors middleware
+import { Request, Response } from 'express';
 
 dotenv.config();
 
@@ -36,26 +37,30 @@ dotenv.config();
  *       500:
  *         description: Error resetting password
  */
-async function resetPasswordHandler(req, res) {
+const resetPasswordHandler = async (req: Request, res: Response): Promise<void> => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    res.status(405).json({ message: 'Method not allowed' });
+    return;
   }
 
   const { token, newPassword } = req.body;
 
   if (!token || !newPassword) {
-    return res.status(400).json({ message: 'Token and new password are required' });
+    res.status(400).json({ message: 'Token and new password are required' });
+    return;
   }
 
   try {
-    let decoded;
+    let decoded: any;
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (error) {
+      decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    } catch (error: any) {
       if (error.name === 'TokenExpiredError') {
-        return res.status(401).json({ message: 'Token has expired! Try requesting reset password again' });
+        res.status(401).json({ message: 'Token has expired! Try requesting reset password again' });
+        return;
       }
-      return res.status(401).json({ message: 'Invalid token! ' });
+      res.status(401).json({ message: 'Invalid token!' });
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -72,6 +77,6 @@ async function resetPasswordHandler(req, res) {
     console.error('Error resetting password:', error);
     res.status(500).json({ message: 'Error resetting password' });
   }
-}
+};
 
 export default allowCors(resetPasswordHandler);

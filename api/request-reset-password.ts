@@ -1,9 +1,10 @@
-// api/request-reset-password.js
+// api/request-reset-password.ts
 import dotenv from 'dotenv';
 import { Client } from 'pg';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import allowCors from './cors'; // Import the allowCors middleware
+import { Request, Response } from 'express';
 
 dotenv.config();
 
@@ -32,15 +33,17 @@ dotenv.config();
  *       500:
  *         description: Error sending email
  */
-async function requestResetPasswordHandler(req, res) {
+const requestResetPasswordHandler = async (req: Request, res: Response): Promise<void> => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    res.status(405).json({ message: 'Method not allowed' });
+    return;
   }
 
   const { email } = req.body;
 
   if (!email) {
-    return res.status(400).json({ message: 'Email is required' });
+    res.status(400).json({ message: 'Email is required' });
+    return;
   }
 
   const client = new Client({ connectionString: process.env.POSTGRES_URL });
@@ -51,11 +54,12 @@ async function requestResetPasswordHandler(req, res) {
 
   if (result.rows.length === 0) {
     client.end();
-    return res.status(400).json({ message: 'Email not found' });
+    res.status(400).json({ message: 'Email not found' });
+    return;
   }
 
   const userId = result.rows[0].id;
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
 
   const resetLink = `${process.env.FE_DOMAIN}/reset-password?token=${token}`;
 
@@ -88,6 +92,6 @@ async function requestResetPasswordHandler(req, res) {
   } finally {
     client.end();
   }
-}
+};
 
 export default allowCors(requestResetPasswordHandler);
