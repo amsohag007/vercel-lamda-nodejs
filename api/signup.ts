@@ -1,7 +1,8 @@
-// api/signup.js
+// api/signup.ts
 import bcrypt from 'bcrypt';
 import { Pool } from 'pg';
 import allowCors from './cors'; // Import the allowCors middleware
+import { Request, Response } from 'express';
 
 // Database connection pool
 const pool = new Pool({
@@ -33,15 +34,17 @@ const pool = new Pool({
  *       500:
  *         description: Internal server error
  */
-async function signupHandler(req, res) {
+const signupHandler = async (req: any, res: any): Promise<void> => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    res.status(405).json({ message: 'Method not allowed' });
+    return;
   }
 
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
+    res.status(400).json({ message: 'Email and password are required' });
+    return;
   }
 
   try {
@@ -53,7 +56,8 @@ async function signupHandler(req, res) {
       const existingUser = await client.query('SELECT * FROM users WHERE email = $1', [email]);
 
       if (existingUser.rows.length > 0) {
-        return res.status(400).json({ message: 'User already exists' });
+        res.status(400).json({ message: 'User already exists' });
+        return;
       }
 
       const query = 'INSERT INTO users (email, password) VALUES ($1, $2)';
@@ -66,6 +70,6 @@ async function signupHandler(req, res) {
     console.error('Error creating user:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-}
+};
 
 export default allowCors(signupHandler);
