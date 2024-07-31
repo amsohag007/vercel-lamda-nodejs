@@ -1,3 +1,57 @@
+// api/updateUser.js
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { Client } from 'pg'; // Using 'pg' for PostgreSQL client
+import allowCors from './cors'; // Import the allowCors middleware
+
+dotenv.config();
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ * 
+ * /api/settings:
+ *   post:
+ *     summary: Update user email and password
+ *     description: Updates the user's email and/or password by verifying the old password and JWT token.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *               newEmail:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful update
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Old password and/or new password are required
+ *       401:
+ *         description: Invalid credentials or JWT token
+ *       500:
+ *         description: Internal server error
+ */
 async function updateUserHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -32,7 +86,7 @@ async function updateUserHandler(req, res) {
     const userResult = await client.query(userQuery, [userId]);
 
     if (userResult.rows.length === 0) {
-      return res.status(401).json({ message: 'Email & Password does not match.' });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const user = userResult.rows[0];
@@ -42,7 +96,7 @@ async function updateUserHandler(req, res) {
     if (oldPassword && newPassword) {
       const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
       if (!isOldPasswordValid) {
-        return res.status(401).json({ message: 'Email & Password does not match.' });
+        return res.status(401).json({ message: 'Invalid credentials' });
       }
       updatePassword = true; // Proceed to update the password
     }
@@ -59,14 +113,6 @@ async function updateUserHandler(req, res) {
 
     // Update email if it is provided and different from the current email
     if (newEmail && newEmail !== user.email) {
-      // Check if the new email already exists
-      const emailQuery = 'SELECT * FROM users WHERE email = $1';
-      const emailResult = await client.query(emailQuery, [newEmail]);
-
-      if (emailResult.rows.length > 0) {
-        return res.status(400).json({ message: 'Email already exists! Try different email.' });
-      }
-
       updates.push('email = $2');
       values.push(newEmail);
     }
