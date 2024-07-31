@@ -24,6 +24,9 @@ const swaggerOptions: Options = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 const router: Router = express.Router();
 
-router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: CSS_URL }));
+router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
+  customCss: '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
+  customCssUrl: CSS_URL,
+}));
 
 export default router;
