@@ -26,7 +26,7 @@ app.use('/api-docs', swaggerRouter);
 
 // Dummy root route
 app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to Vercel Serverless API Functions');
+  res.send('Welcome to Income Path Serverless API Functions');
 });
 
 // API routes
