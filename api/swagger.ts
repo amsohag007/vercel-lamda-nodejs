@@ -1,11 +1,10 @@
-// api/swagger.js
-import swaggerJsDoc from "swagger-jsdoc";
+import swaggerJsDoc, { Options } from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import express from "express";
+import express, { Router } from "express";
 
 const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
-const swaggerOptions = {
+const swaggerOptions: Options = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
@@ -19,15 +18,12 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./api/*.js"],
+  apis: ["./api/*.ts"], // Adjust the path to your API files
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-const router = express.Router();
+const router: Router = express.Router();
 
-router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
-  customCss: '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
-  customCssUrl: CSS_URL,
-}));
+router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: CSS_URL }));
 
 export default router;

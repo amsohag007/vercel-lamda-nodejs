@@ -1,6 +1,5 @@
-// app.js
 import dotenv from 'dotenv';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import swaggerRouter from './api/swagger';
 import signupRouter from './api/signup';
@@ -14,7 +13,7 @@ const app = express();
 app.use(express.json());
 
 // Configure CORS
-const corsOptions = {
+const corsOptions: cors.CorsOptions = {
   origin: '*', // Allow all origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
@@ -26,7 +25,7 @@ app.use(cors(corsOptions));
 app.use('/api-docs', swaggerRouter);
 
 // Dummy root route
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Vercel Serverless API Functions');
 });
 
@@ -36,6 +35,5 @@ app.use('/api/login', loginRouter);
 app.use('/api/request-reset-password', requestResetPasswordRouter);
 app.use('/api/reset-password', resetPasswordRouter);
 app.use('/api/settings', accountSettingsRouter);
-
 
 export default app; // Ensure that app is exported correctly
