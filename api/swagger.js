@@ -9,17 +9,17 @@ const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      title: "Vercel Serverless API",
+      title: "Income Path Serverless API",
       version: "1.0.0",
-      description: "API documentation for Vercel serverless functions",
+      description: "API documentation for Income Path Serverless Functions",
     },
     servers: [
       {
-        url: "https://vercel-lamda-nodejs.vercel.app",
+        url: "https://income-path-be.vercel.app",
       },
     ],
   },
-  apis: ["./api/*.js"], // Adjust the path as necessary
+  apis: ["./api/*.js"],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);

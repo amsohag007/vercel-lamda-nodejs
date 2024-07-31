@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Client } from 'pg'; // Using 'pg' for PostgreSQL client
+import allowCors from './cors'; // Import the allowCors middleware
 
 dotenv.config();
 
@@ -38,11 +39,11 @@ dotenv.config();
  *       400:
  *         description: Email and password are required
  *       401:
- *         description: Invalid credentials
+ *         description: Email & Password does not match.
  *       500:
  *         description: Internal server error
  */
-export default async function loginHandler(req, res) {
+async function loginHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -50,7 +51,7 @@ export default async function loginHandler(req, res) {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
+    return res.status(400).json({ message: 'Email & Password are required' });
   }
 
   const client = new Client({ connectionString: process.env.POSTGRES_URL });
@@ -62,14 +63,14 @@ export default async function loginHandler(req, res) {
     const result = await client.query(query, [email]);
 
     if (result.rows.length === 0) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Email & Password does not match.' });
     }
 
     const user = result.rows[0];
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Email & Password does not match.' });
     }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '4h' });
@@ -81,3 +82,5 @@ export default async function loginHandler(req, res) {
     await client.end();
   }
 }
+
+export default allowCors(loginHandler);

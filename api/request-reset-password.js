@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { Client } from 'pg';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
+import allowCors from './cors'; // Import the allowCors middleware
 
 dotenv.config();
 
@@ -31,7 +32,7 @@ dotenv.config();
  *       500:
  *         description: Error sending email
  */
-export default async function requestResetPasswordHandler(req, res) {
+async function requestResetPasswordHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -88,3 +89,5 @@ export default async function requestResetPasswordHandler(req, res) {
     client.end();
   }
 }
+
+export default allowCors(requestResetPasswordHandler);

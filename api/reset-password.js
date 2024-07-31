@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { Client } from 'pg';
 import jwt from 'jsonwebtoken';
+import allowCors from './cors'; // Import the allowCors middleware
 
 dotenv.config();
 
@@ -35,7 +36,7 @@ dotenv.config();
  *       500:
  *         description: Error resetting password
  */
-export default async function resetPasswordHandler(req, res) {
+async function resetPasswordHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -47,7 +48,16 @@ export default async function resetPasswordHandler(req, res) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({ message: 'Token has expired! Try requesting reset password again' });
+      }
+      return res.status(401).json({ message: 'Invalid token! ' });
+    }
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     const client = new Client({ connectionString: process.env.POSTGRES_URL });
@@ -56,10 +66,12 @@ export default async function resetPasswordHandler(req, res) {
     const query = 'UPDATE users SET password = $1 WHERE id = $2';
     await client.query(query, [hashedPassword, decoded.userId]);
 
-    client.end();
+    await client.end();
     res.status(200).json({ message: 'Password reset successful' });
   } catch (error) {
     console.error('Error resetting password:', error);
     res.status(500).json({ message: 'Error resetting password' });
   }
 }
+
+export default allowCors(resetPasswordHandler);

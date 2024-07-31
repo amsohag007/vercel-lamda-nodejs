@@ -7,18 +7,20 @@ import signupRouter from './api/signup';
 import loginRouter from './api/login';
 import requestResetPasswordRouter from './api/request-reset-password';
 import resetPasswordRouter from './api/reset-password';
+import accountSettingsRouter from './api/settings';
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 
 // Configure CORS
-app.use(cors({
-  origin: 'http://localhost:3000/', // Adjust this to your front-end URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+const corsOptions = {
+  origin: '*', // Allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+  credentials: true, // Allow cookies to be sent
+};
+app.use(cors(corsOptions));
 
 // Set up Swagger
 app.use('/api-docs', swaggerRouter);
@@ -33,5 +35,7 @@ app.use('/api/signup', signupRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/request-reset-password', requestResetPasswordRouter);
 app.use('/api/reset-password', resetPasswordRouter);
+app.use('/api/settings', accountSettingsRouter);
+
 
 export default app; // Ensure that app is exported correctly

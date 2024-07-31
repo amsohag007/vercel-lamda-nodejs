@@ -1,10 +1,11 @@
+// api/signup.js
 import bcrypt from 'bcrypt';
-import { Pool } from 'pg'; // Using Pool for PostgreSQL client
-import allowCors from './cors';
+import { Pool } from 'pg';
+import allowCors from './cors'; // Import the allowCors middleware
 
 // Database connection pool
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL, // Ensure this environment variable is set 
+  connectionString: process.env.POSTGRES_URL, // Ensure this environment variable is set
 });
 
 /**
@@ -12,7 +13,7 @@ const pool = new Pool({
  * /api/signup:
  *   post:
  *     summary: Sign up a new user
- *     description: Creates a new user with a username, email, and password.
+ *     description: Creates a new user with an email and password.
  *     requestBody:
  *       required: true
  *       content:
@@ -20,8 +21,6 @@ const pool = new Pool({
  *           schema:
  *             type: object
  *             properties:
- *               username:
- *                 type: string
  *               email:
  *                 type: string
  *               password:
@@ -30,19 +29,19 @@ const pool = new Pool({
  *       201:
  *         description: User created
  *       400:
- *         description: Username, email, or password is missing or user already exists
+ *         description: Email or password is missing or user already exists
  *       500:
  *         description: Internal server error
  */
-const signupHandler = async (req, res) => {
+async function signupHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'email, and password are required' });
+    return res.status(400).json({ message: 'Email and password are required' });
   }
 
   try {
@@ -51,14 +50,14 @@ const signupHandler = async (req, res) => {
     const client = await pool.connect();
 
     try {
-      const existingUser = await client.query('SELECT * FROM users WHERE username = $1 OR email = $2', [username, email]);
+      const existingUser = await client.query('SELECT * FROM users WHERE email = $1', [email]);
 
       if (existingUser.rows.length > 0) {
         return res.status(400).json({ message: 'User already exists' });
       }
 
-      const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
-      await client.query(query, [username, email, hashedPassword]);
+      const query = 'INSERT INTO users (email, password) VALUES ($1, $2)';
+      await client.query(query, [email, hashedPassword]);
       res.status(201).json({ message: 'User created' });
     } finally {
       client.release();
@@ -68,4 +67,5 @@ const signupHandler = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
 export default allowCors(signupHandler);
