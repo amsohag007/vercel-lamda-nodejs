@@ -19,6 +19,9 @@ const swaggerOptions = {
     },
     servers: [
       {
+        url: "https://vercel-lamda-nodejs.vercel.app",
+      },
+      {
         url: "https://income-path-be.vercel.app",
       },
     ],

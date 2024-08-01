@@ -60,29 +60,35 @@ const pool = new Pool({
  *                 type: number
  *               pension_benefit_start_age:
  *                 type: integer
- *             oneOf:
- *               - required:
- *                   - retirement_age
- *                   - retirement_income_assets
- *                   - first_year_income
- *                   - spending_flexibility
- *                   - equity_allocation
- *                   - annuity_payout_rate
- *                 description: Required fields for the basic income path
- *               - required:
- *                   - retirement_age
- *                   - retirement_income_assets
- *                   - first_year_income
- *                   - annuity_income
- *                   - spending_flexibility_increase
- *                   - spending_flexibility_decrease
- *                   - allocation_to_stocks
- *                   - social_security
- *                   - inflation_adjustment
- *                   - social_security_claiming_age
- *                   - pension_benefit
- *                   - pension_benefit_start_age
- *                 description: Required fields for the advanced income path
+ *     examples:
+ *       basic:
+ *         summary: Example for basic income path
+ *         value:
+ *           type: basic
+ *           description: Basic income path for retirement planning
+ *           retirement_age: 65
+ *           retirement_income_assets: 500000
+ *           first_year_income: 40000
+ *           spending_flexibility: 2000
+ *           equity_allocation: 60
+ *           annuity_payout_rate: 5
+ *       advanced:
+ *         summary: Example for advanced income path
+ *         value:
+ *           type: advanced
+ *           description: Advanced income path with detailed planning
+ *           retirement_age: 65
+ *           retirement_income_assets: 1000000
+ *           first_year_income: 60000
+ *           annuity_income: 30000
+ *           spending_flexibility_increase: 1500
+ *           spending_flexibility_decrease: 500
+ *           allocation_to_stocks: 70
+ *           social_security: 20000
+ *           inflation_adjustment: 2
+ *           social_security_claiming_age: 67
+ *           pension_benefit: 15000
+ *           pension_benefit_start_age: 65
  *     responses:
  *       201:
  *         description: Income path created successfully
