@@ -6,7 +6,6 @@ import { Request, Response } from 'express';
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
-
 /**
  * @swagger
  * /api/create-income-path:
@@ -108,6 +107,7 @@ const pool = new Pool({
  *       500:
  *         description: Internal server error
  */
+
 const createIncomePathHandler = async (req: Request, res: Response): Promise<void> => {
   if (req.method !== 'POST') {
     res.status(405).json({ message: 'Method not allowed' });
@@ -128,8 +128,9 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
     return;
   }
 
+  // Use user_id from decoded token
+  const user_id = decoded.id; // Assuming the user ID is stored as 'id' in the token payload
   const {
-    user_id,
     type,
     description,
     retirement_age,
@@ -149,8 +150,8 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
     pension_benefit_start_age,
   } = req.body;
 
-  if (!user_id || !type) {
-    res.status(400).json({ message: 'user_id and type are required' });
+  if (!type) {
+    res.status(400).json({ message: 'Type is required' });
     return;
   }
 
@@ -224,6 +225,7 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 const validateBasicFields = (data: any): boolean => {
   const { retirement_age, retirement_income_assets, first_year_income, spending_flexibility, equity_allocation, annuity_payout_rate } = data;
