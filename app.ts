@@ -40,9 +40,7 @@ app.use('/api/request-reset-password', requestResetPasswordRouter);
 app.use('/api/reset-password', resetPasswordRouter);
 app.use('/api/settings', accountSettingsRouter);
 app.use('/api/create-income-path', createIncomePathRouter);
-app.use('/api/income-path/create',);
-app.use('/api/create-income-path', createIncomePathRouter);
-app.use('/api/create-income-path', createIncomePath);
+app.use('/api/income-path/create', createIncomePath);
 app.use('/api/income-paths/get-all', getAllIncomePath);
 app.use('/api/income-paths/get-details', getIncomePathDetails);
 
