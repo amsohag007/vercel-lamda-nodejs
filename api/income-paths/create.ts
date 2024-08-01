@@ -159,15 +159,15 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
 
   let decoded: JwtPayload;
   try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
   } catch (error) {
     res.status(401).json({ message: 'Invalid or expired token' });
     return;
   }
 
   // Use user_id from decoded token
-  console.log('User ID:', decoded.id);
-  const user_id = decoded.id; // Assuming the user ID is stored as 'id' in the token payload
+  console.log('User ID:', decoded);
+  const user_id = decoded.userId; // Assuming the user ID is stored as 'id' in the token payload
   const {
     type,
     description,

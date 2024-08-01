@@ -56,12 +56,13 @@ const getIncomePathsHandler = async (req: Request, res: Response): Promise<void>
 
   let decoded: JwtPayload;
   try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
   } catch (error) {
     res.status(401).json({ message: 'Invalid or expired token' });
     return;
   }
 
+  console.log('decoded token', decoded);
   try {
     const client = await pool.connect();
     const result = await client.query('SELECT * FROM income_paths WHERE user_id = $1', [decoded.user_id]);
