@@ -6,6 +6,7 @@ import e, { Request, Response } from 'express';
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
+
 /**
  * @swagger
  * /api/income-paths/get-all:
@@ -14,6 +15,8 @@ const pool = new Pool({
  *     description: Retrieves all income paths associated with the authenticated user.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - IncomePaths
  *     responses:
  *       200:
  *         description: Successfully retrieved income paths
@@ -46,7 +49,7 @@ const pool = new Pool({
  *         description: Unauthorized - Invalid or missing token
  *       500:
  *         description: Internal server error
- */
+*/
 const getIncomePathsHandler = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {

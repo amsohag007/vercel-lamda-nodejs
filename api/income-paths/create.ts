@@ -6,14 +6,24 @@ import { Request, Response } from 'express';
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
+
 /**
  * @swagger
- * /api/create-income-path:
+ * tags:
+ *   - name: IncomePaths
+ *     description: Operations related to income paths
+ */
+
+/**
+ * @swagger
+ * /api/income-paths/create:
  *   post:
  *     summary: Create a new income path
  *     description: Creates a new income path. Validates the required fields based on the specified type (basic or advanced).
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - IncomePaths
  *     requestBody:
  *       required: true
  *       content:

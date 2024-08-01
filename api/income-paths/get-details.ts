@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
+
 /**
  * @swagger
  * /api/income-paths/get-details:
@@ -26,6 +27,8 @@ const pool = new Pool({
  *               id:
  *                 type: integer
  *                 description: ID of the income path
+ *     tags:
+ *       - IncomePaths
  *     responses:
  *       200:
  *         description: Successfully retrieved income path details
