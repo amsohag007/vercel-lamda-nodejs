@@ -166,6 +166,7 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
   }
 
   // Use user_id from decoded token
+  console.log('User ID:', decoded.id);
   const user_id = decoded.id; // Assuming the user ID is stored as 'id' in the token payload
   const {
     type,

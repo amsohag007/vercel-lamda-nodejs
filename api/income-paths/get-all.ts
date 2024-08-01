@@ -8,7 +8,7 @@ const pool = new Pool({
 });
 /**
  * @swagger
- * /api/income-paths:
+ * /api/income-paths/get-all:
  *   get:
  *     summary: Get all income paths for a user
  *     description: Retrieves all income paths associated with the authenticated user.

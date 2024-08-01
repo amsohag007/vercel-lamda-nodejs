@@ -79,6 +79,7 @@ const loginHandler = async (req: Request, res: Response): Promise<void> => {
     }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string, { expiresIn: '4h' });
+    console.log('User logged in:', user.id, "token:", token);
     res.status(200).json({ email: user.email, token }); // Return email instead of username
   } catch (error) {
     console.error('Error during login:', error);
