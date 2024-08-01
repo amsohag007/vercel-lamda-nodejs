@@ -11,8 +11,8 @@ const pool = new Pool({
  * @swagger
  * /api/create-income-path:
  *   post:
- *     summary: Create a new income path
- *     description: Creates a new income path with the specified type (basic or advanced). Validates the required fields based on the type.
+ *     summary: Create a new basic income path
+ *     description: Creates a new basic income path. Validates the required fields for the basic type.
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -20,12 +20,41 @@ const pool = new Pool({
  *       content:
  *         application/json:
  *           schema:
- *             oneOf:
- *               - $ref: '#/components/schemas/IncomePathBasic'
- *               - $ref: '#/components/schemas/IncomePathAdvanced'
+ *             type: object
+ *             required:
+ *               - user_id
+ *               - type
+ *               - retirement_age
+ *               - retirement_income_assets
+ *               - first_year_income
+ *               - spending_flexibility
+ *               - equity_allocation
+ *               - annuity_payout_rate
+ *             properties:
+ *               user_id:
+ *                 type: integer
+ *                 description: ID of the user associated with the income path
+ *               type:
+ *                 type: string
+ *                 enum: [basic]
+ *                 description: Type of the income path
+ *               description:
+ *                 type: string
+ *               retirement_age:
+ *                 type: integer
+ *               retirement_income_assets:
+ *                 type: number
+ *               first_year_income:
+ *                 type: number
+ *               spending_flexibility:
+ *                 type: number
+ *               equity_allocation:
+ *                 type: number
+ *               annuity_payout_rate:
+ *                 type: number
  *     responses:
  *       201:
- *         description: Income path created successfully
+ *         description: Basic income path created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -41,90 +70,92 @@ const pool = new Pool({
  *         description: Unauthorized - Invalid or missing token
  *       500:
  *         description: Internal server error
- * components:
- *   schemas:
- *     IncomePathCommon:
- *       type: object
- *       required:
- *         - user_id
- *         - type
- *       properties:
- *         user_id:
- *           type: integer
- *           description: ID of the user associated with the income path
- *         type:
- *           type: string
- *           enum: [basic, advanced]
- *           description: Type of the income path
- *         description:
- *           type: string
- *     IncomePathBasic:
- *       allOf:
- *         - $ref: '#/components/schemas/IncomePathCommon'
- *         - type: object
- *           required:
- *             - retirement_age
- *             - retirement_income_assets
- *             - first_year_income
- *             - spending_flexibility
- *             - equity_allocation
- *             - annuity_payout_rate
- *           properties:
- *             retirement_age:
- *               type: integer
- *             retirement_income_assets:
- *               type: number
- *             first_year_income:
- *               type: number
- *             spending_flexibility:
- *               type: number
- *             equity_allocation:
- *               type: number
- *             annuity_payout_rate:
- *               type: number
- *     IncomePathAdvanced:
- *       allOf:
- *         - $ref: '#/components/schemas/IncomePathCommon'
- *         - type: object
- *           required:
- *             - retirement_age
- *             - retirement_income_assets
- *             - first_year_income
- *             - annuity_income
- *             - spending_flexibility_increase
- *             - spending_flexibility_decrease
- *             - allocation_to_stocks
- *             - social_security
- *             - inflation_adjustment
- *             - social_security_claiming_age
- *             - pension_benefit
- *             - pension_benefit_start_age
- *           properties:
- *             retirement_age:
- *               type: integer
- *             retirement_income_assets:
- *               type: number
- *             first_year_income:
- *               type: number
- *             annuity_income:
- *               type: number
- *             spending_flexibility_increase:
- *               type: number
- *             spending_flexibility_decrease:
- *               type: number
- *             allocation_to_stocks:
- *               type: number
- *             social_security:
- *               type: number
- *             inflation_adjustment:
- *               type: number
- *             social_security_claiming_age:
- *               type: integer
- *             pension_benefit:
- *               type: number
- *             pension_benefit_start_age:
- *               type: integer
  */
+
+
+/**
+ * @swagger
+ * /api/create-income-path:
+ *   post:
+ *     summary: Create a new advanced income path
+ *     description: Creates a new advanced income path. Validates the required fields for the advanced type.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - user_id
+ *               - type
+ *               - retirement_age
+ *               - retirement_income_assets
+ *               - first_year_income
+ *               - annuity_income
+ *               - spending_flexibility_increase
+ *               - spending_flexibility_decrease
+ *               - allocation_to_stocks
+ *               - social_security
+ *               - inflation_adjustment
+ *               - social_security_claiming_age
+ *               - pension_benefit
+ *               - pension_benefit_start_age
+ *             properties:
+ *               user_id:
+ *                 type: integer
+ *                 description: ID of the user associated with the income path
+ *               type:
+ *                 type: string
+ *                 enum: [advanced]
+ *                 description: Type of the income path
+ *               description:
+ *                 type: string
+ *               retirement_age:
+ *                 type: integer
+ *               retirement_income_assets:
+ *                 type: number
+ *               first_year_income:
+ *                 type: number
+ *               annuity_income:
+ *                 type: number
+ *               spending_flexibility_increase:
+ *                 type: number
+ *               spending_flexibility_decrease:
+ *                 type: number
+ *               allocation_to_stocks:
+ *                 type: number
+ *               social_security:
+ *                 type: number
+ *               inflation_adjustment:
+ *                 type: number
+ *               social_security_claiming_age:
+ *                 type: integer
+ *               pension_benefit:
+ *                 type: number
+ *               pension_benefit_start_age:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Advanced income path created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 id:
+ *                   type: integer
+ *       400:
+ *         description: Bad request - Missing required fields
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       500:
+ *         description: Internal server error
+ */
+
 const createIncomePathHandler = async (req: Request, res: Response): Promise<void> => {
   if (req.method !== 'POST') {
     res.status(405).json({ message: 'Method not allowed' });
