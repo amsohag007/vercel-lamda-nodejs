@@ -19,75 +19,9 @@ const pool = new Pool({
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - type
- *             properties:
- *               type:
- *                 type: string
- *                 enum: [basic, advanced]
- *                 description: Type of the income path
- *               description:
- *                 type: string
- *               retirement_age:
- *                 type: integer
- *               retirement_income_assets:
- *                 type: number
- *               first_year_income:
- *                 type: number
- *               spending_flexibility:
- *                 type: number
- *               equity_allocation:
- *                 type: number
- *               annuity_payout_rate:
- *                 type: number
- *               annuity_income:
- *                 type: number
- *               spending_flexibility_increase:
- *                 type: number
- *               spending_flexibility_decrease:
- *                 type: number
- *               allocation_to_stocks:
- *                 type: number
- *               social_security:
- *                 type: number
- *               inflation_adjustment:
- *                 type: number
- *               social_security_claiming_age:
- *                 type: integer
- *               pension_benefit:
- *                 type: number
- *               pension_benefit_start_age:
- *                 type: integer
- *     examples:
- *       basic:
- *         summary: Example for basic income path
- *         value:
- *           type: basic
- *           description: Basic income path for retirement planning
- *           retirement_age: 65
- *           retirement_income_assets: 500000
- *           first_year_income: 40000
- *           spending_flexibility: 2000
- *           equity_allocation: 60
- *           annuity_payout_rate: 5
- *       advanced:
- *         summary: Example for advanced income path
- *         value:
- *           type: advanced
- *           description: Advanced income path with detailed planning
- *           retirement_age: 65
- *           retirement_income_assets: 1000000
- *           first_year_income: 60000
- *           annuity_income: 30000
- *           spending_flexibility_increase: 1500
- *           spending_flexibility_decrease: 500
- *           allocation_to_stocks: 70
- *           social_security: 20000
- *           inflation_adjustment: 2
- *           social_security_claiming_age: 67
- *           pension_benefit: 15000
- *           pension_benefit_start_age: 65
+ *             oneOf:
+ *               - $ref: '#/components/schemas/BasicIncomePath'
+ *               - $ref: '#/components/schemas/AdvancedIncomePath'
  *     responses:
  *       201:
  *         description: Income path created successfully
@@ -106,7 +40,110 @@ const pool = new Pool({
  *         description: Unauthorized - Invalid or missing token
  *       500:
  *         description: Internal server error
+ * components:
+ *   schemas:
+ *     BasicIncomePath:
+ *       type: object
+ *       required:
+ *         - type
+ *         - retirement_age
+ *         - retirement_income_assets
+ *         - first_year_income
+ *         - spending_flexibility
+ *         - equity_allocation
+ *         - annuity_payout_rate
+ *       properties:
+ *         type:
+ *           type: string
+ *           enum: [basic]
+ *           description: Type of the income path
+ *         description:
+ *           type: string
+ *         retirement_age:
+ *           type: integer
+ *         retirement_income_assets:
+ *           type: number
+ *         first_year_income:
+ *           type: number
+ *         spending_flexibility:
+ *           type: number
+ *         equity_allocation:
+ *           type: number
+ *         annuity_payout_rate:
+ *           type: number
+ *       example:
+ *         type: basic
+ *         description: Basic income path for retirement planning
+ *         retirement_age: 65
+ *         retirement_income_assets: 500000
+ *         first_year_income: 40000
+ *         spending_flexibility: 2000
+ *         equity_allocation: 60
+ *         annuity_payout_rate: 5
+ *     AdvancedIncomePath:
+ *       type: object
+ *       required:
+ *         - type
+ *         - retirement_age
+ *         - retirement_income_assets
+ *         - first_year_income
+ *         - annuity_income
+ *         - spending_flexibility_increase
+ *         - spending_flexibility_decrease
+ *         - allocation_to_stocks
+ *         - social_security
+ *         - inflation_adjustment
+ *         - social_security_claiming_age
+ *         - pension_benefit
+ *         - pension_benefit_start_age
+ *       properties:
+ *         type:
+ *           type: string
+ *           enum: [advanced]
+ *           description: Type of the income path
+ *         description:
+ *           type: string
+ *         retirement_age:
+ *           type: integer
+ *         retirement_income_assets:
+ *           type: number
+ *         first_year_income:
+ *           type: number
+ *         annuity_income:
+ *           type: number
+ *         spending_flexibility_increase:
+ *           type: number
+ *         spending_flexibility_decrease:
+ *           type: number
+ *         allocation_to_stocks:
+ *           type: number
+ *         social_security:
+ *           type: number
+ *         inflation_adjustment:
+ *           type: number
+ *         social_security_claiming_age:
+ *           type: integer
+ *         pension_benefit:
+ *           type: number
+ *         pension_benefit_start_age:
+ *           type: integer
+ *       example:
+ *         type: advanced
+ *         description: Advanced income path with detailed planning
+ *         retirement_age: 65
+ *         retirement_income_assets: 1000000
+ *         first_year_income: 60000
+ *         annuity_income: 30000
+ *         spending_flexibility_increase: 1500
+ *         spending_flexibility_decrease: 500
+ *         allocation_to_stocks: 70
+ *         social_security: 20000
+ *         inflation_adjustment: 2
+ *         social_security_claiming_age: 67
+ *         pension_benefit: 15000
+ *         pension_benefit_start_age: 65
  */
+
 
 const createIncomePathHandler = async (req: Request, res: Response): Promise<void> => {
   if (req.method !== 'POST') {
@@ -163,7 +200,7 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
   }
 
   if (!isValid) {
-    res.status(400).json({ message: 'Missing required fields for the specified type' });
+    res.status(400).json({ message: `Missing required fields for the ${type} type` });
     return;
   }
 
@@ -172,6 +209,7 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
 
     try {
       let incomePathId: number | null = null;
+      let incomePtahDescription = description || '';
       if (type === 'basic') {
         // Insert only basic fields
         const basicQuery = `
@@ -188,6 +226,7 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
 
         const result = await client.query(basicQuery, basicValues);
         incomePathId = result.rows[0].id;
+        incomePtahDescription = result.rows[0].description;
       } else if (type === 'advanced') {
         // Insert advanced fields including basic ones
         const advancedQuery = `
@@ -210,10 +249,11 @@ const createIncomePathHandler = async (req: Request, res: Response): Promise<voi
 
         const result = await client.query(advancedQuery, advancedValues);
         incomePathId = result.rows[0].id;
+        incomePtahDescription = result.rows[0].description;
       }
 
       if (incomePathId !== null) {
-        res.status(201).json({ id: incomePathId, message: 'Income path created successfully' });
+        res.status(201).json({ id: incomePathId, description: incomePtahDescription, message: 'Income path created successfully' });
       } else {
         res.status(500).json({ message: 'Failed to create income path' });
       }
