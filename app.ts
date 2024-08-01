@@ -7,6 +7,7 @@ import loginRouter from './api/login';
 import requestResetPasswordRouter from './api/request-reset-password';
 import resetPasswordRouter from './api/reset-password';
 import accountSettingsRouter from './api/settings';
+import createIncomePathRouter from './api/create-income-path';
 
 dotenv.config();
 const app = express();
@@ -35,5 +36,7 @@ app.use('/api/login', loginRouter);
 app.use('/api/request-reset-password', requestResetPasswordRouter);
 app.use('/api/reset-password', resetPasswordRouter);
 app.use('/api/settings', accountSettingsRouter);
+app.use('/api/create-income-path', createIncomePathRouter);
+
 
 export default app; // Ensure that app is exported correctly
