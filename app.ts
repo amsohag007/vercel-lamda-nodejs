@@ -8,6 +8,9 @@ import requestResetPasswordRouter from './api/request-reset-password';
 import resetPasswordRouter from './api/reset-password';
 import accountSettingsRouter from './api/settings';
 import createIncomePathRouter from './api/create-income-path';
+import createIncomePath from './api/income-paths/create';
+import getAllIncomePath from './api/income-paths/get-all';
+import getIncomePathDetails from './api/income-paths/get-details';
 
 dotenv.config();
 const app = express();
@@ -37,6 +40,10 @@ app.use('/api/request-reset-password', requestResetPasswordRouter);
 app.use('/api/reset-password', resetPasswordRouter);
 app.use('/api/settings', accountSettingsRouter);
 app.use('/api/create-income-path', createIncomePathRouter);
-
+app.use('/api/income-path/create',);
+app.use('/api/create-income-path', createIncomePathRouter);
+app.use('/api/create-income-path', createIncomePath);
+app.use('/api/income-paths/get-all', getAllIncomePath);
+app.use('/api/income-paths/get-details', getIncomePathDetails);
 
 export default app; // Ensure that app is exported correctly
