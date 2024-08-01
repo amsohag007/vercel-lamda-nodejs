@@ -8,19 +8,24 @@ const pool = new Pool({
 });
 /**
  * @swagger
- * /api/income-paths/{id}:
- *   get:
+ * /api/income-paths/get-details:
+ *   post:
  *     summary: Get income path details
  *     description: Retrieves detailed information for a specific income path by ID.
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: ID of the income path
- *         schema:
- *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 description: ID of the income path
  *     responses:
  *       200:
  *         description: Successfully retrieved income path details
@@ -54,6 +59,7 @@ const pool = new Pool({
  *       500:
  *         description: Internal server error
  */
+
 const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -69,15 +75,15 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
     return;
   }
 
-  const incomePathId = parseInt(req.params.id);
-  if (isNaN(incomePathId)) {
+  const { id: incomePathId } = req.body; // Get the ID from the request body
+  if (typeof incomePathId !== 'number' || isNaN(incomePathId)) {
     res.status(400).json({ message: 'Invalid income path ID' });
     return;
   }
 
   try {
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM income_paths WHERE id = $1 AND user_id = $2', [incomePathId, decoded.user_id]);
+    const result = await client.query('SELECT * FROM income_paths WHERE id = $1 AND user_id = $2', [incomePathId, decoded.userId]);
 
     if (result.rows.length === 0) {
       res.status(404).json({ message: 'Income path not found' });
@@ -90,5 +96,6 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 export default allowCors(getIncomePathDetailsHandler);
