@@ -7,9 +7,13 @@ import loginRouter from './api/login';
 import requestResetPasswordRouter from './api/request-reset-password';
 import resetPasswordRouter from './api/reset-password';
 import accountSettingsRouter from './api/settings';
-import createIncomePath from './api/income-paths/create';
+import createIncomePath from './api/income-paths/update';
 import getAllIncomePath from './api/income-paths/get-all';
 import getIncomePathDetails from './api/income-paths/get-details';
+import getAllUser from './api/users/get-all';
+import getUserDetailsById from './api/users/get-details'
+import updateUserById from './api/users/update';
+import deleteUserById from './api/users/delete'
 
 dotenv.config();
 const app = express();
@@ -38,8 +42,12 @@ app.use('/api/login', loginRouter);
 app.use('/api/request-reset-password', requestResetPasswordRouter);
 app.use('/api/reset-password', resetPasswordRouter);
 app.use('/api/settings', accountSettingsRouter);
-app.use('/api/income-path/create', createIncomePath);
+app.use('/api/income-paths/create', createIncomePath);
 app.use('/api/income-paths/get-all', getAllIncomePath);
 app.use('/api/income-paths/get-details', getIncomePathDetails);
+app.use('/api/users/get-all', getAllUser);
+app.use('/api/users/get-details', getUserDetailsById);
+app.use('/api/users/update', updateUserById);
+app.use('/api/users/delete', deleteUserById);
 
 export default app; // Ensure that app is exported correctly
