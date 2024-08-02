@@ -84,8 +84,9 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
     return;
   }
 
+  let client;
   try {
-    const client = await pool.connect();
+    client = await pool.connect();
     const result = await client.query('SELECT * FROM income_paths WHERE id = $1 AND user_id = $2', [incomePathId, decoded.userId]);
 
     if (result.rows.length === 0) {
@@ -97,6 +98,10 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
   } catch (error) {
     console.error('Error retrieving income path details:', error);
     res.status(500).json({ message: 'Internal server error' });
+  } finally {
+    if (client) {
+      await client.release();
+    }
   }
 };
 

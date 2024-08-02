@@ -66,13 +66,18 @@ const getIncomePathsHandler = async (req: Request, res: Response): Promise<void>
   }
 
   console.log('decoded token', decoded);
+  let client;
   try {
-    const client = await pool.connect();
+    client = await pool.connect();
     const result = await client.query('SELECT * FROM income_paths WHERE user_id = $1', [decoded.userId]);
     res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error retrieving income paths:', error);
     res.status(500).json({ message: 'Internal server error' });
+  } finally {
+    if (client) {
+      await client.release();
+    }
   }
 };
 
