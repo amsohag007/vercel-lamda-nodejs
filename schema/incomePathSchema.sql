@@ -5,9 +5,10 @@ CREATE TYPE income_path_type AS ENUM ('basic', 'advanced');
 CREATE TABLE income_paths (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE, -- Foreign key referencing users
-    type income_path_type NOT NULL, -- Use the enum type
+    type income_path_type DEFAULT NULL, -- Use the enum type
     description TEXT,
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Both Basic and Advanced fields
     retirement_age INTEGER,
