@@ -27,7 +27,10 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./api/income-paths/get-details/[id].ts'],
+  apis: [
+    '/var/task/api/income-paths/update/*.js',
+    '/var/task/api/income-paths/get-details/*.js',
+    ...filePatterns],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
@@ -37,9 +40,5 @@ router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
   customCss: '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
   customCssUrl: CSS_URL,
 }));
-
-router.get('/swagger.json', (req, res) => {
-  res.json(swaggerDocs);
-});
 
 export default router;
