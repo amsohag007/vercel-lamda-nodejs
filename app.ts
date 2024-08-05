@@ -11,7 +11,7 @@ import createIncomePath from './api/income-paths/create';
 import getAllIncomePath from './api/income-paths/get-all';
 import getIncomePathDetails from './api/income-paths/get-details/[id]';
 import updateIncomePath from './api/income-paths/update/[id]';
-import deleteIncomePath from './api/income-paths/delete/[id]';
+import deleteIncomePath from './api/income-paths/delete/id';
 dotenv.config();
 const app = express();
 app.use(express.json());
