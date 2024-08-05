@@ -8,6 +8,7 @@ const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger
 
 // Use glob to include .ts and .js files only, excluding directories
 const filePatterns = glob.sync(path.join(__dirname, '../api/**/*.{ts,js}'), { nodir: true });
+console.log("filePatterns", filePatterns); // Add this line to check the matched file paths
 
 const swaggerOptions = {
   swaggerDefinition: {

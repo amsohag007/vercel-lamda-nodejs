@@ -38,11 +38,12 @@ app.use('/api/signup', signupRouter);
 app.use('/api/login', loginRouter);
 // app.use('/api/request-reset-password', requestResetPasswordRouter);
 // app.use('/api/reset-password', resetPasswordRouter);
-app.use('/api/settings', accountSettingsRouter);
-app.use('/api/income-paths/create', createIncomePath);
-app.use('/api/income-paths/get-all', getAllIncomePath);
 app.use('/api/income-paths/get-details/:id', getIncomePathDetails);
 app.use('/api/income-paths/update/:id', updateIncomePath);
 app.use('/api/income-paths/delete/:id', deleteIncomePath);
+app.use('/api/settings', accountSettingsRouter);
+app.use('/api/income-paths/create', createIncomePath);
+app.use('/api/income-paths/get-all', getAllIncomePath);
+
 
 export default app; // Ensure that app is exported correctly
