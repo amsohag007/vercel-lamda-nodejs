@@ -7,7 +7,7 @@ const glob = require('glob'); // CommonJS import
 const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 // Use glob to include .ts and .js files only, excluding directories
-const filePatterns = glob.sync(path.join(__dirname, '../api/**/**/*.{ts,js}'), { nodir: true });
+const filePatterns = glob.sync(path.join(__dirname, '../api/**/*.{ts,js}'), { nodir: true });
 
 const swaggerOptions = {
   swaggerDefinition: {
