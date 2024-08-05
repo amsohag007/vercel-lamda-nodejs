@@ -81,7 +81,8 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
     return;
   }
 
-  const incomePathId = parseInt(req.params.id, 10);
+  const { id } = req.query;
+  const incomePathId = parseInt(id as string, 10);
   if (isNaN(incomePathId)) {
     res.status(400).json({ message: 'Invalid income path ID' });
     return;
