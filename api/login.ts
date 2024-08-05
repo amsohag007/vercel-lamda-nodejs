@@ -23,8 +23,13 @@ dotenv.config();
  *             properties:
  *               email:
  *                 type: string
+ *                 example: user@example.com
  *               password:
  *                 type: string
+ *                 example: securepassword123
+ *             required:
+ *               - email
+ *               - password
  *     responses:
  *       200:
  *         description: Successful login

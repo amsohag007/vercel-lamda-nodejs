@@ -36,6 +36,11 @@ const pool = new Pool({
  *         description: Internal server error
  */
 const deleteIncomePathHandler = async (req: Request, res: Response): Promise<void> => {
+  if (req.method !== 'DELETE') {
+    res.status(405).json({ message: 'Only DELETE method allowed' });
+    return;
+  }
+
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     res.status(401).json({ message: 'Missing auth token' });
