@@ -38,4 +38,8 @@ router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
   customCssUrl: CSS_URL,
 }));
 
+router.get('/swagger.json', (req, res) => {
+  res.json(swaggerDocs);
+});
+
 export default router;
