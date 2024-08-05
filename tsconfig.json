@@ -12,6 +12,6 @@
     "typeRoots": ["./node_modules/@types"],
     "removeComments": false
   },
-  "include": ["api/**/*"],
+  "include": ["api/**/*", "api/income-paths", "auth"],
   "exclude": ["node_modules"]
 }
