@@ -42,7 +42,7 @@ app.use('/api/settings', accountSettingsRouter);
 app.use('/api/income-paths/create', createIncomePath);
 app.use('/api/income-paths/get-all', getAllIncomePath);
 app.use('/api/income-paths/get-details/:id', getIncomePathDetails);
-app.use('/api/income-paths/update/:id', updateIncomePath);
-app.use('/api/income-paths/delete/:id', deleteIncomePath);
+// app.use('/api/income-paths/update/:id', updateIncomePath);
+// app.use('/api/income-paths/delete/:id', deleteIncomePath);
 
 export default app; // Ensure that app is exported correctly
