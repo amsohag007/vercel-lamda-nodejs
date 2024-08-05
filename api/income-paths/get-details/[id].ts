@@ -76,19 +76,20 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
     return;
   }
 
-  console.log('Request received for user ID:', req.query);
-  const { id } = req.query
+  if (!decoded.userId) {
+    res.status(401).json({ message: 'Invalid token payload' });
+    return;
+  }
 
-
-  const incomePathId = parseInt(id as string, 10);
+  const incomePathId = parseInt(req.params.id, 10);
   if (isNaN(incomePathId)) {
     res.status(400).json({ message: 'Invalid income path ID' });
     return;
   }
-  console.log('Request received for user ID:', req.query);
 
+  let client;
   try {
-    const client = await pool.connect();
+    client = await pool.connect(); // Get a client from the pool
     const result = await client.query('SELECT * FROM income_paths WHERE id = $1 AND user_id = $2', [incomePathId, decoded.userId]);
 
     if (result.rows.length === 0) {
@@ -101,8 +102,12 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
     console.error('Error retrieving income path details:', error);
     res.status(500).json({ message: 'Internal server error' });
   } finally {
-    await pool.end();
+    // Only release the client, not the pool
+    if (client) {
+      client.release();
+    }
   }
 };
+
 
 export default allowCors(getIncomePathDetailsHandler);
