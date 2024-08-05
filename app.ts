@@ -4,12 +4,14 @@ import cors from 'cors';
 import swaggerRouter from './api/swagger';
 import signupRouter from './api/signup';
 import loginRouter from './api/login';
-import requestResetPasswordRouter from './api/request-reset-password';
-import resetPasswordRouter from './api/reset-password';
+// import requestResetPasswordRouter from './api/request-reset-password';
+// import resetPasswordRouter from './api/reset-password';
 import accountSettingsRouter from './api/settings';
-import createIncomePath from './api/income-paths/update';
+import createIncomePath from './api/income-paths/create';
 import getAllIncomePath from './api/income-paths/get-all';
 import getIncomePathDetails from './api/income-paths/get-details/[id]';
+import updateIncomePath from './api/income-paths/update/[id]';
+import deleteIncomePath from './api/income-paths/delete/[id]';
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -34,11 +36,13 @@ app.get('/', (req: Request, res: Response) => {
 // API routes
 app.use('/api/signup', signupRouter);
 app.use('/api/login', loginRouter);
-app.use('/api/request-reset-password', requestResetPasswordRouter);
-app.use('/api/reset-password', resetPasswordRouter);
+// app.use('/api/request-reset-password', requestResetPasswordRouter);
+// app.use('/api/reset-password', resetPasswordRouter);
 app.use('/api/settings', accountSettingsRouter);
 app.use('/api/income-paths/create', createIncomePath);
 app.use('/api/income-paths/get-all', getAllIncomePath);
 app.use('/api/income-paths/get-details/:id', getIncomePathDetails);
+app.use('/api/income-paths/update/:id', updateIncomePath);
+app.use('/api/income-paths/delete/:id', deleteIncomePath);
 
 export default app; // Ensure that app is exported correctly
