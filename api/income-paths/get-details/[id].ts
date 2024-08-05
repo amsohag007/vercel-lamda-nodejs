@@ -1,3 +1,4 @@
+// api/income-paths/get-details/[id].ts
 import { Pool } from 'pg';
 import allowCors from '../../cors';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -75,13 +76,15 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
     return;
   }
 
+  console.log('Request received for user ID:', req.query, req.params);
+
 
   const incomePathId = parseInt(req.params.id, 10);
   if (isNaN(incomePathId)) {
     res.status(400).json({ message: 'Invalid income path ID' });
     return;
   }
-  console.log('Request received for user ID:', req.params.id);
+  console.log('Request received for user ID:', req.query);
 
   try {
     const client = await pool.connect();
