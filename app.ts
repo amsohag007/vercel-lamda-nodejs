@@ -39,6 +39,6 @@ app.use('/api/reset-password', resetPasswordRouter);
 app.use('/api/settings', accountSettingsRouter);
 app.use('/api/income-paths/create', createIncomePath);
 app.use('/api/income-paths/get-all', getAllIncomePath);
-app.use('/api/income-paths/get-details', getIncomePathDetails);
+app.use('/api/income-paths/get-details/:id', getIncomePathDetails);
 
 export default app; // Ensure that app is exported correctly

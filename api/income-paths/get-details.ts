@@ -75,6 +75,7 @@ const getIncomePathDetailsHandler = async (req: Request, res: Response): Promise
     return;
   }
 
+  console.log('Request received for user ID:', req.params.id);
   const incomePathId = parseInt(req.params.id, 10);
   if (isNaN(incomePathId)) {
     res.status(400).json({ message: 'Invalid income path ID' });
