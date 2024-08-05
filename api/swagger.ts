@@ -27,7 +27,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: filePatterns,
+  apis: ['./api/income-paths/get-details/[id].ts'],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
