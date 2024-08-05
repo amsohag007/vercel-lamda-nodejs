@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import allowCors from '../../cors';
+import allowCors from '../cors';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 

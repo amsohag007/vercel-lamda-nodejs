@@ -9,7 +9,7 @@ import resetPasswordRouter from './api/reset-password';
 import accountSettingsRouter from './api/settings';
 import createIncomePath from './api/income-paths/update';
 import getAllIncomePath from './api/income-paths/get-all';
-import getIncomePathDetails from './api/income-paths/get-details/[id]';
+import getIncomePathDetails from './api/income-paths/get-details';
 dotenv.config();
 const app = express();
 app.use(express.json());
