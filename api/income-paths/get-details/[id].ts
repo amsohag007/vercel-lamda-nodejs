@@ -11,39 +11,50 @@ const pool = new Pool({
 /**
  * @swagger
  * /api/income-paths/get-details/{id}:
- *   post:
- *     summary: Create a new income path
- *     description: Creates a new income path with only the description required. Other fields can be updated later.
+ *   get:
+ *     summary: Get income path details
+ *     description: Retrieves detailed information for a specific income path by ID.
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           description: ID of the income path
  *     tags:
  *       - IncomePaths
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               description:
- *                 type: string
- *                 description: Description of the income path
- *             required:
- *               - description
  *     responses:
- *       201:
- *         description: Income path created successfully
+ *       200:
+ *         description: Successfully retrieved income path details
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
  *                 id:
  *                   type: integer
+ *                 user_id:
+ *                   type: integer
+ *                 type:
+ *                   type: string
+ *                   enum: [basic, advanced]
+ *                 description:
+ *                   type: string
+ *                 retirement_age:
+ *                   type: integer
+ *                 retirement_income_assets:
+ *                   type: number
+ *                 first_year_income:
+ *                   type: number
+ *                 created_date:
+ *                   type: string
+ *                   format: date-time
  *       400:
- *         description: Bad request - Missing required fields
+ *         description: Invalid income path ID
+ *       404:
+ *         description: Income path not found
  *       401:
  *         description: Unauthorized - Invalid or missing token
  *       500:

@@ -28,6 +28,7 @@ const swaggerOptions = {
     ],
   },
   apis: [
+    '/var/task/api/income-paths/delete/*.js',
     '/var/task/api/income-paths/update/*.js',
     '/var/task/api/income-paths/get-details/*.js',
     ...filePatterns],
