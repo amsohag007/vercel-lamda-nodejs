@@ -8,26 +8,26 @@ CREATE TABLE income_paths (
     type income_path_type DEFAULT NULL, -- Use the enum type
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP DEFAULT NULL,
 
     -- Both Basic and Advanced fields
     retirement_age INTEGER,
-    retirement_income_assets DECIMAL(15, 2),
-    first_year_income DECIMAL(15, 2),
+    retirement_income_assets DOUBLE PRECISION,
+    first_year_income DOUBLE PRECISION,
 
     -- Basic fields
-    spending_flexibility DECIMAL(5, 2),
-    equity_allocation DECIMAL(5, 2),
-    annuity_payout_rate DECIMAL(5, 2),
+    spending_flexibility DOUBLE PRECISION,
+    equity_allocation DOUBLE PRECISION,
+    annuity_payout_rate DOUBLE PRECISION,
 
     -- Advanced fields
-    annuity_income DECIMAL(15, 2),
-    spending_flexibility_increase DECIMAL(5, 2),
-    spending_flexibility_decrease DECIMAL(5, 2),
-    allocation_to_stocks DECIMAL(5, 2),
-    social_security DECIMAL(15, 2),
-    inflation_adjustment DECIMAL(5, 2),
+    annuity_income DOUBLE PRECISION,
+    spending_flexibility_increase DOUBLE PRECISION,
+    spending_flexibility_decrease DOUBLE PRECISION,
+    allocation_to_stocks DOUBLE PRECISION,
+    social_security DOUBLE PRECISION,
+    inflation_adjustment DOUBLE PRECISION,
     social_security_claiming_age INTEGER,
-    pension_benefit DECIMAL(15, 2),
+    pension_benefit DOUBLE PRECISION,
     pension_benefit_start_age INTEGER
 );
